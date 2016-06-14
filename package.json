@@ -4,9 +4,9 @@
   "description": "Clone Stash Projects",
   "homepage": "",
   "author": {
-    "name": "kuros",
+    "name": "Kumar Rohit",
     "email": "",
-    "url": ""
+    "url": "https://github.com/kuros/stash-cloner"
   },
   "main": "index.js",
   "devDependencies": {

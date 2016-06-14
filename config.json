@@ -3,5 +3,6 @@
   "host": "stash.server.com",
   "filter-name": "project filter by name",
   "https": false,
-  "ssh": null
+  "ssh": false,
+  "cwd": null
 }

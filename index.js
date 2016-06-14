@@ -5,7 +5,6 @@ var rest = require("restler");
 var async = require("async");
 var fs = require("fs");
 var childProcess = require('child_process');
-var cwd = process.cwd();
 
 // Config
 var rootUrl = config.https ? 'https' : 'http' + '://' + config.host + '/rest/api/1.0/';
@@ -72,7 +71,7 @@ inquirer.prompt(questions).then(function (answers) {
 
         var repoSelectionQuestion = [
           {type: "checkbox", name: "repos", message: "Select the repos to manage:", choices: choices},
-          {type: "input", name: "location", message: "Target clone folder (will be created if it doesn't exist):"},
+          {type: "input", name: "location", message: "Target clone folder (will be created if it doesn't exist):"}
         ];
 
         // Ask which repo(s)
@@ -88,20 +87,31 @@ inquirer.prompt(questions).then(function (answers) {
           });
 
           // Check/make the dir
+          changeWorkingDirectory();
+
           prepFs(answers.location);
           // Clone those repos (with very little error checking)
-          cloneRepos(selectedRepos, targetProject.key.toLowerCase());
-
+          cloneRepos(selectedRepos);
         });
       });
     });
   });
 });
 
+function changeWorkingDirectory() {
+  if (config.cwd) {
+    try {
+      process.chdir(config.cwd);
+    } catch (err) {
+      console.log('chdir: ' + config.cwd + ' \n' + err);
+      process.exit();
+    }
+  }
+}
 
-function prepFs(path) {
+function prepFs(pathValue) {
   // Check/make dir
-  var path = path.replace('~', getUserHome());
+  var path = pathValue.replace('~', getUserHome());
   if (!fs.existsSync(path)) {
     fs.mkdirSync(path);
   }
@@ -112,16 +122,17 @@ function prepFs(path) {
   try {
     process.chdir(path);
   } catch (err) {
-    console.log('chdir: ' + err);
+    console.log('chdir: ' + path);
+    console.log(err);
     process.exit();
   }
 }
-function cloneRepos(repos, projectKey) {
+function cloneRepos(repos) {
   // Clone each repo
   repos.forEach(function (e) {
-    var cloneUrl;
-    if (config.ssh) {
+    var cloneUrl = '';
 
+    if (config.ssh) {
       e.clone.forEach(function (cloneObj) {
         if (cloneObj.name === 'ssh') {
           cloneUrl = cloneObj.href;
@@ -141,7 +152,7 @@ function cloneRepos(repos, projectKey) {
 }
 function cloneRepo(cloneUrl) {
   console.log('git clone ' + cloneUrl);
-  var cloner = childProcess.exec('git clone ' + cloneUrl, function (error, stdout, stderr) {
+  childProcess.exec('git clone ' + cloneUrl, function (error, stdout, stderr) {
     if (error) {
       console.log(error.stack);
       console.log('Error code: ' + error.code);
@@ -181,7 +192,7 @@ function getRepos(password, key, cb) {
 
           // Save the last response, so we know how to proceed in this loop
           lastData = {
-            more: data.isLastPage === false ? true : false,
+            more: data.isLastPage === false,
             start: data.nextPageStart
           };
 
@@ -238,7 +249,7 @@ function getProjects(password, cb) {
 
           // Save the last response, so we know how to proceed in this loop
           lastData = {
-            more: data.isLastPage === false ? true : false,
+            more: data.isLastPage === false,
             start: data.nextPageStart
           };
 
