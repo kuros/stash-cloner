@@ -1,0 +1,28 @@
+{
+  "name": "stash-cloner",
+  "version": "0.0.1",
+  "description": "Clone Stash Projects",
+  "homepage": "",
+  "author": {
+    "name": "kuros",
+    "email": "",
+    "url": ""
+  },
+  "main": "index.js",
+  "devDependencies": {
+    "async": "^2.0.0-rc.6",
+    "handlebars": "3.0.3",
+    "inquirer": "^1.0.3",
+    "jshint-stylish": "^1.0.0",
+    "request": "2.60.0",
+    "restler": "^3.4.0"
+  },
+  "keywords": [
+    "stash",
+    "git",
+    "clone",
+    "projects",
+    "repos"
+  ],
+  "license": "BSD-2-Clause-FreeBSD"
+}
