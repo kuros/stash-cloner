@@ -1,0 +1,27 @@
+#!/bin/bash
+npm install
+ans='n'
+if [ -s config.json ]; then
+  echo Use existing config? \(y/n\)
+  while [ $ans != 'y' -o $ans != 'n' ]; do
+    read ans
+    case $ans in
+      y|Y) ans='y'; break;;
+      n|N) ans='n'; break;;
+      *) echo Please enter y or n;;
+    esac
+  done
+fi
+if [ "$ans" = 'n' ]; then
+  echo Username \(`whoami`\)
+  read uname
+  uname="${uname:=`whoami`}"
+  echo Target parent directory \(`pwd`\)
+  read -e parentDir
+  parentDir="${parentDir:=`pwd`}"
+  parentDir=`cd "$parentDir"; pwd`
+  read -p 'Stash server URL? ' serverURL
+  read -p 'Filter? ' filter
+  echo {\"user\":\"$uname\", \"host\":\"$serverURL\", \"cwd\":\"$parentDir\", \"filter-name\":\"$filter\", \"ssh\":false, \"https\":false} > config.json
+fi
+node index.js
