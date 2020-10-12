@@ -11,10 +11,10 @@
   "main": "index.js",
   "devDependencies": {
     "async": "^2.0.0-rc.6",
-    "handlebars": "3.0.3",
+    "handlebars": "^3.0.3",
     "inquirer": "^1.0.3",
     "jshint-stylish": "^1.0.0",
-    "request": "2.60.0",
+    "request": "^2.60.0",
     "restler": "^3.4.0"
   },
   "keywords": [
